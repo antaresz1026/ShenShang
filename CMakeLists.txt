@@ -1,9 +1,10 @@
+cmake_policy(SET CMP0167 OLD)
 cmake_minimum_required(VERSION 3.10)
 project(ShenShang LANGUAGES CXX)
 
 # ----------- Options -----------
 option(BUILD_TESTS "Build test targets" ON)
-option(ENABLE_INSTALL "Enable install step" ON)
+option(ENABLE_INSTALL "Enable install step" OFF)
 
 # ----------- Compiler Settings -----------
 set(CMAKE_CXX_STANDARD 17)
@@ -30,13 +31,21 @@ set(PROJECT_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(PROJECT_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 find_package(Drogon REQUIRED)
+find_package(Boost REQUIRED COMPONENTS log log_setup thread filesystem system date_time)
 include_directories(${PROJECT_INCLUDE_DIR})
 file(GLOB_RECURSE SRC_FILES ${PROJECT_SRC_DIR}/*.cpp)
 
 # ----------- Core Library -----------
 add_library(ShenShangCore ${SRC_FILES})
 target_include_directories(ShenShangCore PUBLIC ${PROJECT_INCLUDE_DIR})
-target_link_libraries(ShenShangCore PUBLIC Drogon::Drogon jsoncpp)
+target_link_libraries(ShenShangCore PUBLIC Drogon::Drogon 
+  jsoncpp  
+  Boost::log 
+  Boost::log_setup 
+  Boost::thread 
+  Boost::filesystem 
+  Boost::system
+)
 
 # ----------- Main Target -----------
 add_executable(${PROJECT_NAME} src/main.cpp)
