@@ -1,11 +1,17 @@
-# tests/CMakeLists.txt
-
 file(GLOB TEST_SOURCES *.cpp)
-add_executable(ShenShang_TEST ${TEST_SOURCES})
 
-# GoogleTest assumed to be added via FetchContent or submodule
-# Example: FetchContent_MakeAvailable(gtest)
 find_package(GTest REQUIRED)
 
-target_link_libraries(ShenShang_TEST PRIVATE GTest::gtest_main)
-add_test(NAME AllTests COMMAND ShenShang_TEST)
+foreach(test_file ${TEST_SOURCES})
+    get_filename_component(test_name ${test_file} NAME_WE)
+    add_executable(${test_name} ${test_file})
+    target_link_libraries(${test_name}
+        PRIVATE
+        ShenShangCore         # ✅ 这里是关键
+        Drogon::Drogon
+        GTest::gtest_main
+        jsoncpp
+        pthread
+    )
+    add_test(NAME ${test_name} COMMAND ${test_name})
+endforeach()

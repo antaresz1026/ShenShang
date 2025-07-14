@@ -8,14 +8,13 @@ option(ENABLE_INSTALL "Enable install step" ON)
 # ----------- Compiler Settings -----------
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # compile_commands.json
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # ----------- Build Types -----------
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
 endif()
 
-# Debug / Release flags
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -30,28 +29,24 @@ endif()
 set(PROJECT_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(PROJECT_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
+find_package(Drogon REQUIRED)
 include_directories(${PROJECT_INCLUDE_DIR})
-
 file(GLOB_RECURSE SRC_FILES ${PROJECT_SRC_DIR}/*.cpp)
 
-# ----------- Main Target -----------
-add_executable(${PROJECT_NAME} ${SRC_FILES})
-target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_INCLUDE_DIR})
+# ----------- Core Library -----------
+add_library(ShenShangCore ${SRC_FILES})
+target_include_directories(ShenShangCore PUBLIC ${PROJECT_INCLUDE_DIR})
+target_link_libraries(ShenShangCore PUBLIC Drogon::Drogon jsoncpp)
 
-# ----------- Subdirectories / Modules -----------
-# add_subdirectory(external/mylib)
-# target_link_libraries(${PROJECT_NAME} mylib)
+# ----------- Main Target -----------
+add_executable(${PROJECT_NAME} src/main.cpp)
+target_link_libraries(${PROJECT_NAME} PRIVATE ShenShangCore)
 
 # ----------- Tests -----------
 if(BUILD_TESTS)
   enable_testing()
   include(CTest)
-
-  # GoogleTest or Catch2 example
-  # Add a subdirectory containing tests
   add_subdirectory(tests)
-
-  # Optionally: target_link_libraries(MyTests PRIVATE mylib)
 endif()
 
 # ----------- Install Rules -----------

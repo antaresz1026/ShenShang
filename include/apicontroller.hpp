@@ -1,5 +1,4 @@
-#include <drogon/HttpController.h>
-#include <nlohmann/json.hpp>
+#include <drogon/drogon.h>
 
 class APIController : public drogon::HttpController<APIController> {
 public:
@@ -7,7 +6,8 @@ public:
     ADD_METHOD_TO(APIController::hello, "/api/hello", drogon::Get);
     METHOD_LIST_END
 
-    void rep(std::string code, std::string msg, nl)
+    void rep(const std::string& msg,
+                                   std::function<void(const drogon::HttpResponsePtr &)> &&callback);
 
     void hello(const drogon::HttpRequestPtr& req,
                std::function<void(const drogon::HttpResponsePtr&)>&& callback);
