@@ -1,0 +1,51 @@
+title: CHANGELOG
+repository_url: ""
+
+sections:
+  - title: "✨ 新功能"
+    commits:
+      - feat
+  - title: "🐛 修复"
+    commits:
+      - fix
+  - title: "🧼 重构"
+    commits:
+      - refactor
+  - title: "📚 文档"
+    commits:
+      - docs
+  - title: "🎨 样式"
+    commits:
+      - style
+  - title: "🔧 杂项"
+    commits:
+      - chore
+  - title: "🧪 测试"
+    commits:
+      - test
+  - title: "⚡ 性能"
+    commits:
+      - perf
+  - title: "💥 重大变更"
+    commits:
+      - BREAKING CHANGE
+
+commit_groups:
+  title_maps:
+    feat: 新功能
+    fix: 修复
+
+templates:
+  commit: |
+    - {{.Subject}}
+  commit_empty: |
+    - 无
+  footer: |
+    ---
+    _由 [git-chglog](https://github.com/git-chglog/git-chglog) 自动生成_
+  header: |
+    # 更新日志
+
+    本文件记录了项目的所有重要变更。
+  template: CHANGELOG.md.tmpl
+
