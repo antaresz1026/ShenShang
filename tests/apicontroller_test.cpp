@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
+#include <gtest/gtest.h>
 #include <drogon/drogon.h>
-#include "apicontroller.hpp"
+#include "logic_layer/apicontroller.hpp"
+#include <json/json.h>
 
 TEST(APIControllerTest, HelloResponseContainsMsg)
 {
@@ -20,6 +22,13 @@ TEST(APIControllerTest, HelloResponseContainsMsg)
 
     ASSERT_EQ(future.wait_for(std::chrono::seconds(1)), std::future_status::ready);
 
-    std::string_view result = future.get();
-    EXPECT_NE(result.find("hello drogon"), std::string::npos);
+    std::string_view _result = future.get();
+    std::string result(_result);
+    // 解析JSON响应
+    Json::Reader reader;
+    Json::Value root;
+    ASSERT_TRUE(reader.parse(result, root));
+    
+    // 检查JSON中的msg字段
+    EXPECT_EQ(root["msg"].asString(), "hello drogon");
 }

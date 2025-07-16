@@ -1,4 +1,4 @@
-#include "logger.hpp"
+#include "basic_layer/logger.hpp"
 
 #include <boost/log/core/core.hpp>
 #include <boost/log/expressions.hpp>
@@ -37,7 +37,13 @@ std::string get_today_date() {
     return std::string(buf);
 }
 
-void Logger::init() {
+void shenshang::logger::Logger::init() {
+    static bool initialized = false;
+    if (initialized) {
+        return; // 已经初始化过，直接返回
+    }
+    
+
     boost::log::add_common_attributes();
 
     // 控制台 sink（只记录 info 以上，彩色输出）
@@ -95,6 +101,6 @@ void Logger::init() {
     history_sink->set_filter(boost::log::trivial::severity >= boost::log::trivial::trace);
 }
 
-boost::log::sources::severity_logger_mt<boost::log::trivial::severity_level>& Logger::get() {
+static boost::log::sources::severity_logger_mt<boost::log::trivial::severity_level>& core() {
     return global_logger;
 }
