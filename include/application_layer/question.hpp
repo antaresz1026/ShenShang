@@ -37,7 +37,6 @@ class Question {
     int id;
     std::string description;
     std::map<std::string, std::string> options;
-    std::string explanation;
     QuestionType type;
     QuestonCategory category;
 

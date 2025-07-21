@@ -26,7 +26,6 @@ elseif(MSVC)
   add_compile_options(/W4)
 endif()
 
-# ----------- Project Structure -----------
 set(PROJECT_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(PROJECT_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
@@ -37,22 +36,18 @@ find_package(GTest REQUIRED)
 include_directories(${PROJECT_INCLUDE_DIR})
 file(GLOB_RECURSE SRC_FILES ${PROJECT_SRC_DIR}/*.cpp)
 
-# ----------- Core Library -----------
 add_subdirectory(src/basic_layer)
 add_subdirectory(src/logic_layer)
 
-# ----------- Main Target -----------
 add_executable(${PROJECT_NAME} src/main.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE Basic_layer Logic_layer)
 
-# ----------- Tests -----------
 if(BUILD_TESTS)
   enable_testing()
   include(CTest)
   add_subdirectory(tests)
 endif()
 
-# ----------- Install Rules -----------
 if(ENABLE_INSTALL)
   install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
   install(DIRECTORY ${PROJECT_INCLUDE_DIR}/ DESTINATION include)
