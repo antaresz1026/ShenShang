@@ -22,9 +22,6 @@ TEST(LoggerConfigInitTest, CatchLoggerInitException) {
 }
 
 TEST(LoggerTest, BasicLoggingDoesNotThrow) {
-    // 确保只初始化一次
-    shenshang::logger::Logger::init();
-    
     ASSERT_NO_THROW({
         shenshang::logger::Logger::info("测试 info 日志");
         shenshang::logger::Logger::warn("测试 warning 日志");
