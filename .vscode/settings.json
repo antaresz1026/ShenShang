@@ -75,6 +75,10 @@
         "typeindex": "cpp",
         "typeinfo": "cpp",
         "variant": "cpp",
-        "text_encoding": "cpp"
+        "text_encoding": "cpp",
+        "strstream": "cpp",
+        "csignal": "cpp",
+        "list": "cpp",
+        "shared_mutex": "cpp"
     }
 }

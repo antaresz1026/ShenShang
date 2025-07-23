@@ -2,13 +2,13 @@
 #include <mutex>
 
 namespace shenshang::db {
-    void SqlConnection::init(const std::string& dbURI) {
+    void SQLConnection::init(const std::string& dbURI) {
             static std::once_flag flag;
             std::call_once(flag, [dbURI]() {
-                _dbClient = drogon::orm::DbClient::newMysqlClient(dbURI, 16);
+                _dbClient = drogon::orm::DbClient::newPgClient(dbURI, 16);
             });
     }
-    drogon::orm::DbClientPtr SqlConnection::client() {
+    drogon::orm::DbClientPtr SQLConnection::client() {
         return _dbClient;
     }
 }

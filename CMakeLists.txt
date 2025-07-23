@@ -40,6 +40,8 @@ add_subdirectory(src/basic_layer)
 add_subdirectory(src/logic_layer)
 
 add_executable(${PROJECT_NAME} src/main.cpp)
+add_executable(PS_DROGON_TEST test.cpp)
+target_link_libraries(PS_DROGON_TEST PRIVATE Drogon::Drogon)
 target_link_libraries(${PROJECT_NAME} PRIVATE Basic_layer Logic_layer)
 
 if(BUILD_TESTS)
