@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include "basic_layer/configloader.hpp"
-#include "basic_layer/exceptions.hpp"
+#include "utils/configloader.hpp"
+#include "utils/exceptions.hpp"
 #include <iostream>
 
 TEST(ConfigLoaderTest, BasicRead) {

@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <mutex>
 #include <condition_variable>
-#include "logic_layer/sqlconnection.hpp"
+#include "basic_layer/sqlconnection.hpp"
 
 class SQLConnectionTest : public ::testing::Test {
 protected:

@@ -1,12 +1,11 @@
 #include <iostream>
 #include <string>
-#include "basic_layer/logger.hpp"
-#include "basic_layer/configloader.hpp"
+#include "utils/logger.hpp"
+#include "utils/configloader.hpp"
 #include "logic_layer/apicontroller.hpp"
-#include "logic_layer/sqlconnection.hpp"
+#include "basic_layer/sqlconnection.hpp"
 
 int main(int argc, char** argv) {
-    
     shenshang::logger::Logger::init();
     shenshang::config_loader::ConfigLoader cf("/home/antaresz/Projects/ShenShang/settings/default.ini");
     shenshang::db::SQLConnection::init(cf.get<std::string>("database.connectionstring"));

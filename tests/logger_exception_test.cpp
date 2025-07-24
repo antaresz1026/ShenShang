@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include "basic_layer/logger.hpp"
-#include "basic_layer/exceptions.hpp"
+#include "utils/logger.hpp"
+#include "utils/exceptions.hpp"
 #include <stdexcept>
 #include <string>
 

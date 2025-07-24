@@ -1,4 +1,4 @@
-#include "basic_layer/logger.hpp"
+#include "utils/logger.hpp"
 #include <boost/log/core/core.hpp>
 #include <boost/log/expressions.hpp>
 #include <boost/log/sinks/text_file_backend.hpp>
@@ -32,7 +32,7 @@ static std::string get_color(boost::log::trivial::severity_level level) {
 
 std::string get_today_date() {
     std::time_t now = std::time(nullptr);
-    char buf[11]; // YYYY-MM-DD
+    char buf[11];
     std::strftime(buf, sizeof(buf), "%Y-%m-%d", std::localtime(&now));
     return std::string(buf);
 }
@@ -41,8 +41,6 @@ void shenshang::logger::Logger::init() {
     static std::once_flag flag;
     std::call_once(flag, []() {
         boost::log::add_common_attributes();
-
-        // 控制台 sink（只记录 info 以上，彩色输出）
         auto console_sink = boost::make_shared<boost::log::sinks::synchronous_sink<boost::log::sinks::text_ostream_backend>>();
 
         console_sink->locked_backend()->add_stream(boost::shared_ptr<std::ostream>(&std::clog, boost::null_deleter()));
@@ -61,12 +59,10 @@ void shenshang::logger::Logger::init() {
         console_sink->set_filter(boost::log::trivial::severity >= boost::log::trivial::info);
         boost::log::core::get()->add_sink(console_sink);
 
-        // 文件路径准备
         std::string date = get_today_date();
-        std::string dir_path = "./logs/" + date;
+        std::string dir_path = "/home/antaresz/Projects/ShenShang/logs/" + date;
         std::filesystem::create_directories(dir_path);
 
-        // latest.log：覆盖写入
         std::string latest_path = dir_path + "/latest.log";
         auto latest_sink = boost::log::add_file_log(
             boost::log::keywords::file_name = latest_path,
@@ -81,7 +77,6 @@ void shenshang::logger::Logger::init() {
         );
         latest_sink->set_filter(boost::log::trivial::severity >= boost::log::trivial::trace);
 
-        // history.log：追加写入
         std::string history_path = dir_path + "/history.log";
         auto history_sink = boost::log::add_file_log(
             boost::log::keywords::file_name = history_path,

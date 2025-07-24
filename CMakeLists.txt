@@ -32,17 +32,19 @@ set(PROJECT_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 find_package(Drogon REQUIRED)
 find_package(Boost REQUIRED COMPONENTS log log_setup thread filesystem system date_time)
 find_package(GTest REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(SODIUM REQUIRED libsodium)
+
 
 include_directories(${PROJECT_INCLUDE_DIR})
 file(GLOB_RECURSE SRC_FILES ${PROJECT_SRC_DIR}/*.cpp)
 
 add_subdirectory(src/basic_layer)
 add_subdirectory(src/logic_layer)
+add_subdirectory(src/utils)
 
 add_executable(${PROJECT_NAME} src/main.cpp)
-add_executable(PS_DROGON_TEST test.cpp)
-target_link_libraries(PS_DROGON_TEST PRIVATE Drogon::Drogon)
-target_link_libraries(${PROJECT_NAME} PRIVATE Basic_layer Logic_layer)
+target_link_libraries(${PROJECT_NAME} PRIVATE Basic_layer Logic_layer Utils)
 
 if(BUILD_TESTS)
   enable_testing()
