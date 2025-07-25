@@ -1,0 +1,2 @@
+[09:59:28][fatal][0x00007fffd7e006c0] getDbClient() 返回 nullptr，数据库连接未初始化！
+[09:59:28][error][0x00007fffd7e006c0] Register exception: {}InternalErrorException: 数据库连接异常

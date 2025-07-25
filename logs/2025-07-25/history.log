@@ -1,0 +1,11 @@
+[20:00:55][fatal][0x00007ff577e006c0] getDbClient() 返回 nullptr，数据库连接未初始化！
+[20:00:55][error][0x00007ff577e006c0] Register exception: {}InternalErrorException: 数据库连接异常
+[20:04:53][error][0x00007f061d6006c0] Register query error: {}错误:  字段 "user_name" 不存在
+LINE 1: SELECT user_id FROM shenshang.users WHERE user_name = $1
+                                                  ^
+[20:07:57][error][0x00007f061d6006c0] Register query error: {}错误:  对表 users 权限不够
+[20:11:52][error][0x00007f061ea006c0] Register insert error: {}错误:  null value in column "user_id" of relation "users" violates not-null constraint
+DETAIL:  失败, 行包含(null, antaresz, https://chevereto.antaresz.cc/images/2024/05/03/20240204_212332...., $argon2id$v=19$m=65536,t=2,p=1$34tWqilGuMRvgnZ5K9UDAQ$iRqesDSA9V...).
+[20:49:31][error][0x00007f42bcc006c0] Register query error: {}错误:  对表 users 权限不够
+[20:54:53][info][0x00007f42bf4006c0] User '{}' registered successfullyantaresz
+[20:57:17][info][0x00007f854d6006c0] User '{}' logged in successfullyantaresz

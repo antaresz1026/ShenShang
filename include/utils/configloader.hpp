@@ -3,7 +3,7 @@
 #include <boost/property_tree/ini_parser.hpp>
 #include <string>
 
-namespace shenshang::config_loader {
+namespace shenshang::utils::config_loader {
     class ConfigLoader {
     public:
         explicit ConfigLoader(const std::string& file) {

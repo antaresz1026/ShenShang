@@ -10,7 +10,7 @@
 #include <sstream>
 #include <string_view>
 
-namespace shenshang::logger {
+namespace shenshang::utils::logger {
 
     class Logger {
     public:

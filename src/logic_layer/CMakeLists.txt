@@ -6,4 +6,5 @@ target_include_directories(Logic_layer
 target_link_libraries(Logic_layer
   PUBLIC Drogon::Drogon
   jsoncpp
+  Basic_layer
 )

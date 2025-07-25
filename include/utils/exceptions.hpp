@@ -2,7 +2,7 @@
 #include <exception>
 #include <string>
 
-namespace shenshang::exception {
+namespace shenshang::utils::exception {
     class BaseException : public std::exception {
     public:
         explicit BaseException(const std::string& message)
@@ -23,5 +23,17 @@ namespace shenshang::exception {
     public:
         explicit LoggerConfigException(const std::string& message)
             : BaseException("LoggerConfigException: " + message) {}
+    };
+
+    class BadRequestException : public BaseException {
+    public:
+        explicit BadRequestException(const std::string& message)
+            : BaseException("BadRequestException: " + message) {}
+    };
+
+    class InternalErrorException : public BaseException {
+    public:
+        explicit InternalErrorException(const std::string& message)
+            : BaseException("InternalErrorException: " + message) {}
     };
 }

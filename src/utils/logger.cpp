@@ -37,7 +37,7 @@ std::string get_today_date() {
     return std::string(buf);
 }
 
-void shenshang::logger::Logger::init() {
+void shenshang::utils::logger::Logger::init() {
     static std::once_flag flag;
     std::call_once(flag, []() {
         boost::log::add_common_attributes();
