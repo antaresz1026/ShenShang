@@ -33,6 +33,8 @@ find_package(Drogon REQUIRED)
 find_package(Boost REQUIRED COMPONENTS log log_setup thread filesystem system date_time)
 find_package(GTest REQUIRED)
 find_package(PkgConfig REQUIRED)
+find_package(fmt CONFIG REQUIRED)
+
 pkg_check_modules(SODIUM REQUIRED libsodium)
 
 

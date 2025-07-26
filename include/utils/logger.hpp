@@ -6,7 +6,7 @@
 #include <boost/log/utility/setup/file.hpp>
 #include <boost/log/utility/setup/console.hpp>
 #include <boost/log/support/date_time.hpp>
-
+#include <fmt/core.h>
 #include <sstream>
 #include <string_view>
 
@@ -39,10 +39,9 @@ namespace shenshang::utils::logger {
 
     private:
         template <typename... Args>
-        static void log(boost::log::trivial::severity_level lvl, Args&&... args) {
-            std::ostringstream oss;
-            (oss << ... << std::forward<Args>(args));           // C++17 折叠表达式
-            BOOST_LOG_SEV(core(), lvl) << oss.str();
+        static void log(boost::log::trivial::severity_level level, std::string_view fmt_str, Args&&... args) {
+            auto message = fmt::format(fmt_str, std::forward<Args>(args)...);
+            BOOST_LOG_SEV(core(), level) << message;
         }
     };
 }// namespace shenshang::logger

@@ -11,4 +11,5 @@ target_link_libraries(Utils
   Boost::thread 
   Boost::filesystem 
   Boost::system
+  fmt::fmt
 )

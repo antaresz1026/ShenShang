@@ -18,6 +18,7 @@ void APIController::hello(const drogon::HttpRequestPtr& req,
 
 void APIController::user_login(const drogon::HttpRequestPtr &req,
                                std::function<void(const drogon::HttpResponsePtr &)> &&callback) {
+    auto safe_callback = std::make_shared<std::function<void(const drogon::HttpResponsePtr&)>>(std::move(callback));
     try {
         auto json = req->getJsonObject();
         if (!json) {
@@ -36,19 +37,20 @@ void APIController::user_login(const drogon::HttpRequestPtr &req,
             Logger::fatal("getDbClient() 返回 nullptr，数据库连接未初始化！");
             throw shenshang::utils::exception::InternalErrorException("数据库连接异常");
         }
+
         client->execSqlAsync(
             "SELECT user_id, user_name, user_avatar, user_password FROM shenshang.users WHERE user_name = $1",
-            [=, callback = std::move(callback)](const drogon::orm::Result &r) {
+            [=](const drogon::orm::Result &r) {
                 if (r.empty()) {
                     Logger::warn("Login failed: user '{}' not found", name);
-                    return this->rep("用户不存在", std::move(callback));
+                    return this->rep("用户不存在", *safe_callback);
                 }
 
                 auto row = r[0];
                 std::string dbHash = row["user_password"].as<std::string>();
                 if (!shenshang::utils::password::verify(password, dbHash)) {
                     Logger::warn("Login failed: incorrect password for user '{}'", name);
-                    return this->rep("密码错误", std::move(callback));
+                    return this->rep("密码错误", *safe_callback);
                 }
 
                 std::string token = drogon::utils::getUuid();
@@ -60,24 +62,25 @@ void APIController::user_login(const drogon::HttpRequestPtr &req,
                 extra["user"]["name"] = row["user_name"].as<std::string>();
                 extra["user"]["avatar"] = row["user_avatar"].as<std::string>();
 
-                this->rep(true, "登录成功", extra, std::move(callback));
+                this->rep(true, "登录成功", extra, *safe_callback);
             },
-            [=, callback = std::move(callback)](const drogon::orm::DrogonDbException &e) {
+            [=](const drogon::orm::DrogonDbException &e) {
                 Logger::error("Login SQL error: {}", e.base().what());
-                this->rep(std::string("数据库错误: ") + e.base().what(), std::move(callback));
+                this->rep(std::string("数据库错误: ") + e.base().what(), *safe_callback);
             },
             name);
 
     } catch (const BadRequestException& e) {
-        this->rep(e.what(), std::move(callback));
+        this->rep(e.what(), *safe_callback);
     } catch (const std::exception& e) {
         Logger::error("Login exception: {}", e.what());
-        this->rep("服务器内部错误", std::move(callback));
+        this->rep("服务器内部错误", *safe_callback);
     }
 }
 
 void APIController::user_register(const drogon::HttpRequestPtr &req,
                                   std::function<void(const drogon::HttpResponsePtr &)> &&callback) {
+    auto safe_callback = std::make_shared<std::function<void(const drogon::HttpResponsePtr&)>>(std::move(callback));
     try {
         auto json = req->getJsonObject();
         if (!json) {
@@ -100,10 +103,10 @@ void APIController::user_register(const drogon::HttpRequestPtr &req,
         }
         client->execSqlAsync(
             "SELECT user_id FROM shenshang.users WHERE user_name = $1",
-            [=, callback = std::move(callback)](const drogon::orm::Result &r) {
+            [=](const drogon::orm::Result &r) {
                 if (!r.empty()) {
                     Logger::warn("Register failed: user '{}' already exists", name);
-                    return this->rep("用户已存在", std::move(callback));
+                    return this->rep("用户已存在", *safe_callback);
                 }
 
                 std::string hashed = shenshang::utils::password::hash(password);
@@ -112,24 +115,24 @@ void APIController::user_register(const drogon::HttpRequestPtr &req,
                     "INSERT INTO shenshang.users(user_name, user_avatar, user_password) VALUES ($1, $2, $3)",
                     [=](const drogon::orm::Result &) {
                         Logger::info("User '{}' registered successfully", name);
-                        this->rep(true, "注册成功", std::move(callback));
+                        this->rep(true, "注册成功", *safe_callback);
                     },
                     [=](const drogon::orm::DrogonDbException &e) {
                         Logger::error("Register insert error: {}", e.base().what());
-                        this->rep(std::string("插入失败: ") + e.base().what(), std::move(callback));
+                        this->rep(std::string("插入失败: ") + e.base().what(), *safe_callback);
                     },
                     name, avatar, hashed);
             },
-            [=, callback = std::move(callback)](const drogon::orm::DrogonDbException &e) {
+            [=](const drogon::orm::DrogonDbException &e) {
                 Logger::error("Register query error: {}", e.base().what());
-                this->rep(std::string("查询失败: ") + e.base().what(), std::move(callback));
+                this->rep(std::string("查询失败: ") + e.base().what(), *safe_callback);
             },
             name);
 
     } catch (const BadRequestException& e) {
-        this->rep(e.what(), std::move(callback));
+        this->rep(e.what(), *safe_callback);
     } catch (const std::exception& e) {
         Logger::error("Register exception: {}", e.what());
-        this->rep("服务器内部错误", std::move(callback));
+        this->rep("服务器内部错误", *safe_callback);
     }
 }
