@@ -46,7 +46,7 @@ add_subdirectory(src/logic_layer)
 add_subdirectory(src/utils)
 
 add_executable(${PROJECT_NAME} src/main.cpp)
-target_link_libraries(${PROJECT_NAME} PRIVATE Basic_layer Logic_layer Utils)
+target_link_libraries(${PROJECT_NAME} PRIVATE ShenShang::BasicLayer ShenShang::LogicLayer ShenShang::Utils)
 
 if(BUILD_TESTS)
   enable_testing()

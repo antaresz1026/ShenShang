@@ -13,3 +13,4 @@ target_link_libraries(Utils
   Boost::system
   fmt::fmt
 )
+add_library(ShenShang::Utils ALIAS Utils)

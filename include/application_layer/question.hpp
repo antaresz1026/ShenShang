@@ -1,47 +1,54 @@
+#pragma once
 #include <string>
+#include <vector>
 #include <map>
 #include <unordered_map>
-#include <vector>
+#include <optional>
 
-enum class QuestionType {
-    SingleChoice,
-    MultileChoice,
-    TrueOrFalse,
-    Unknown
-};
+namespace shenshang::question {
 
-enum class QuestonCategory {
-    Temp
-};
-
-inline QuestionType questionTypeFromLetter(const std::string& typestr) {
-    static std::unordered_map<std::string, QuestionType> _map = {
-        {"s", QuestionType::SingleChoice},
-        {"m", QuestionType::MultileChoice},
-        {"t", QuestionType::TrueOrFalse}
+    enum class QuestionType {
+        SingleChoice,
+        MultipleChoice,
+        TrueOrFalse,
+        Unknown
     };
-    auto it = _map.find(typestr);
-    return it != _map.end() ? it->second : QuestionType::Unknown;
-}
 
-inline std::string descQuestionType(const QuestionType& qt) {
-    switch(qt) {
-        case QuestionType::SingleChoice: return "单选题";
-        case QuestionType::MultileChoice: return "多选题";
-        case QuestionType::TrueOrFalse: return "判断题";
-        default: return "未知";
+    inline QuestionType questionTypeFromStr(const std::string& type) {
+        static std::unordered_map<std::string, QuestionType> map = {
+            {"单选", QuestionType::SingleChoice},
+            {"多选", QuestionType::MultipleChoice},
+            {"判断", QuestionType::TrueOrFalse}
+        };
+        auto it = map.find(type);
+        return it != map.end() ? it->second : QuestionType::Unknown;
     }
+
+    inline std::string descQuestionType(QuestionType type) {
+        switch (type) {
+            case QuestionType::SingleChoice: return "单选题";
+            case QuestionType::MultipleChoice: return "多选题";
+            case QuestionType::TrueOrFalse:   return "判断题";
+            default: return "未知";
+        }
+    }
+
+    struct Question {
+        int id;
+        QuestionType type;
+        std::string difficulty;
+        std::string consistency;
+        std::vector<std::string> knowledgeTags; 
+        std::string description;
+        std::map<std::string, std::string> options;
+        std::vector<std::string> answers;
+        double score = 1.0;
+        std::string explanation;
+        std::string source;
+        std::string errorInfo;
+
+        bool checkAnswer(const std::vector<std::string>& userAnswer) const {
+            return userAnswer == answers;
+        }
+    };
 }
-
-class Question {
-    int id;
-    std::string description;
-    std::map<std::string, std::string> options;
-    QuestionType type;
-    QuestonCategory category;
-
-    virtual std::string getType() const = 0;
-    virtual bool checkAnswer(const std::vector<std::string>& userAnswer) const = 0;
-    virtual ~Question() = default;
-};
-

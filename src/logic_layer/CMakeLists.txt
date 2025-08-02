@@ -1,10 +1,13 @@
 file(GLOB LOGIC_LAYER ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
-add_library(Logic_layer ${LOGIC_LAYER})
-target_include_directories(Logic_layer
+add_subdirectory(api)
+add_library(LogicLayer ${LOGIC_LAYER})
+target_include_directories(LogicLayer
   PUBLIC ${CMAKE_SOURCE_DIR}/include
 )
-target_link_libraries(Logic_layer
+target_link_libraries(LogicLayer
   PUBLIC Drogon::Drogon
   jsoncpp
-  Basic_layer
+  ShenShang::BasicLayer
+  ShenShang::Api
 )
+add_library(ShenShang::LogicLayer ALIAS LogicLayer)

@@ -1,36 +1,37 @@
+#pragma once
+#include "apibase.hpp"
 #include <drogon/drogon.h>
 
-class APIController : public drogon::HttpController<APIController> {
-public:
-    METHOD_LIST_BEGIN
-    ADD_METHOD_TO(APIController::hello, "/api/hello", drogon::Get);
-    ADD_METHOD_TO(APIController::user_login, "/api/login", drogon::Post);
-    ADD_METHOD_TO(APIController::user_register, "/api/register", drogon::Post);
-    METHOD_LIST_END
+#define AUTO_REGISTER_API(CLASS_NAME, HANDLER_VAR, PATH, CONSTRAINTS)                     \
+    static CLASS_NAME* HANDLER_VAR = new CLASS_NAME();                                    \
+    drogon::app().registerHandler(                                                        \
+        PATH,                                                                              \
+        [](const drogon::HttpRequestPtr& req,                                              \
+           std::function<void(const drogon::HttpResponsePtr&)>&& cb) {                    \
+            HANDLER_VAR->handle(req, std::move(cb));                                       \
+        },                                                                                 \
+        CONSTRAINTS)
 
-    void hello(const drogon::HttpRequestPtr& req, std::function<void(const drogon::HttpResponsePtr&)>&& callback);
-    void user_login(const drogon::HttpRequestPtr& req, std::function<void(const drogon::HttpResponsePtr&)>&& callback);
-    void user_register(const drogon::HttpRequestPtr& req, std::function<void(const drogon::HttpResponsePtr&)>&& callback);
+#define METHODS(...) std::vector<drogon::internal::HttpConstraint>{__VA_ARGS__}
 
-protected:
-    static void rep(bool success, const std::string& msg, const Json::Value& extra,
-                    std::function<void(const drogon::HttpResponsePtr&)> callback) {
-        Json::Value resp;
-        resp["success"] = success;
-        resp["msg"] = msg;
-        for (const auto& key : extra.getMemberNames()) {
-            resp[key] = extra[key];
-        }
-        callback(drogon::HttpResponse::newHttpJsonResponse(resp));
-    }
 
-    static void rep(bool success, const std::string& msg,
-                    std::function<void(const drogon::HttpResponsePtr&)> callback) {
-        rep(success, msg, Json::Value(), std::move(callback));
-    }
 
-    static void rep(const std::string& msg,
-                    std::function<void(const drogon::HttpResponsePtr&)> callback) {
-        rep(false, msg, Json::Value(), std::move(callback));
-    }
-};
+
+namespace shenshang::api {
+    class UserLogin : public shenshang::api::APIBase {
+        public:
+            void handle(const drogon::HttpRequestPtr &req,
+                        std::function<void(const drogon::HttpResponsePtr &)> &&callback) override;
+    };
+    class UserRegister : public shenshang::api::APIBase {
+        public:
+            void handle(const drogon::HttpRequestPtr &req,
+                        std::function<void(const drogon::HttpResponsePtr &)> &&callback) override;
+    };
+    class FileUpload : public shenshang::api::APIBase {
+        public:
+            void handle(const drogon::HttpRequestPtr &req,
+                        std::function<void(const drogon::HttpResponsePtr &)> &&callback) override;
+    };
+    void registerAllAPIs();
+}
