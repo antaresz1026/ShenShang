@@ -13,3 +13,7 @@ add_test(NAME LoggerExcetionTest COMMAND LoggerExcetionTest)
 add_executable(SQLConnectionTest sqlconnection_test.cpp)
 target_link_libraries(SQLConnectionTest PRIVATE GTest::gtest_main ShenShang::BasicLayer)
 add_test(NAME SQLConnectionTest COMMAND SQLConnectionTest)
+
+add_executable(CSVReaderTest csvreader_test.cpp)
+target_link_libraries(CSVReaderTest PRIVATE GTest::gtest_main ShenShang::Utils)
+add_test(NAME CSVReaderTest COMMAND CSVReaderTest)

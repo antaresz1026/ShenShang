@@ -28,7 +28,7 @@ namespace shenshang::api {
             void handle(const drogon::HttpRequestPtr &req,
                         std::function<void(const drogon::HttpResponsePtr &)> &&callback) override;
     };
-    class FileUpload : public shenshang::api::APIBase {
+    class QuestionsUpload : public shenshang::api::APIBase {
         public:
             void handle(const drogon::HttpRequestPtr &req,
                         std::function<void(const drogon::HttpResponsePtr &)> &&callback) override;

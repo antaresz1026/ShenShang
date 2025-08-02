@@ -8,8 +8,7 @@
 
 using namespace shenshang::question;
 
-namespace shenshang::parser {
-
+namespace shenshang::utils::csv {
     std::vector<std::string> split(const std::string& s, char delim) {
         std::vector<std::string> tokens;
         std::stringstream ss(s);
@@ -27,7 +26,7 @@ namespace shenshang::parser {
 
         std::string line;
         std::getline(fin, line); // 跳过表头
-
+        std::getline(fin, line); // 跳过中文字段名
         std::vector<Question> result;
         int idCounter = 1;
 

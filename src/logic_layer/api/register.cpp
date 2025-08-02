@@ -20,14 +20,15 @@ void shenshang::api::UserRegister::handle(const drogon::HttpRequestPtr &req,
             Logger::error("请求体不是 JSON");
             throw BadRequestException("请求体不是合法 JSON");
         }
-        if (!json->isMember("name") || !json->isMember("password") || !json->isMember("avatar")) {
+        if (!json->isMember("user_name") || !json->isMember("user_password") || !json->isMember("user_avatar") || !json->isMember("role")) {
             Logger::warn("Register failed: missing fields");
             throw BadRequestException("输入格式错误");
         }
 
-        std::string name = (*json)["name"].asString();
-        std::string password = (*json)["password"].asString();
-        std::string avatar = (*json)["avatar"].asString();
+        std::string user_name = (*json)["user_name"].asString();
+        std::string user_password = (*json)["user_password"].asString();
+        std::string user_avatar = (*json)["user_avatar"].asString();
+        std::string role = (*json)["role"].asString();
 
         auto client = shenshang::db::SQLConnection::client();
         if (!client) {
@@ -35,32 +36,32 @@ void shenshang::api::UserRegister::handle(const drogon::HttpRequestPtr &req,
             throw shenshang::utils::exception::InternalErrorException("数据库连接异常");
         }
         client->execSqlAsync(
-            "SELECT user_id FROM shenshang.users WHERE user_name = $1",
+            "SELECT 1 FROM shenshang.users WHERE user_name = $1",
             [=](const drogon::orm::Result &r) {
                 if (!r.empty()) {
-                    Logger::warn("Register failed: user '{}' already exists", name);
+                    Logger::warn("Register failed: user '{}' already exists", user_name);
                     return this->rep("用户已存在", *safe_callback);
                 }
 
-                std::string hashed = shenshang::utils::password::hash(password);
+                std::string hashed = shenshang::utils::password::hash(user_password);
 
                 client->execSqlAsync(
-                    "INSERT INTO shenshang.users(user_name, user_avatar, user_password) VALUES ($1, $2, $3)",
+                    "INSERT INTO shenshang.users(user_name, user_avatar, user_password, role, is_active) VALUES ($1, $2, $3, $4, true)",
                     [=](const drogon::orm::Result &) {
-                        Logger::info("User '{}' registered successfully", name);
+                        Logger::info("User '{}' registered successfully", user_name);
                         this->rep(true, "注册成功", *safe_callback);
                     },
                     [=](const drogon::orm::DrogonDbException &e) {
                         Logger::error("Register insert error: {}", e.base().what());
                         this->rep(std::string("插入失败: ") + e.base().what(), *safe_callback);
                     },
-                    name, avatar, hashed);
+                    user_name, user_avatar, hashed, role);
             },
             [=](const drogon::orm::DrogonDbException &e) {
                 Logger::error("Register query error: {}", e.base().what());
                 this->rep(std::string("查询失败: ") + e.base().what(), *safe_callback);
             },
-            name);
+            user_name);
 
     } catch (const BadRequestException& e) {
         this->rep(e.what(), *safe_callback);

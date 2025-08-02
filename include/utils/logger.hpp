@@ -41,7 +41,17 @@ namespace shenshang::utils::logger {
         template <typename... Args>
         static void log(boost::log::trivial::severity_level level, std::string_view fmt_str, Args&&... args) {
             auto message = fmt::format(fmt_str, std::forward<Args>(args)...);
-            BOOST_LOG_SEV(core(), level) << message;
+            // 替换换行符为 "\n"
+            std::string safe_message;
+            safe_message.reserve(message.size());
+            for (char c : message) {
+                if (c == '\n') {
+                    safe_message += "\\n";
+                } else {
+                    safe_message += c;
+                }
+            }
+            BOOST_LOG_SEV(core(), level) << safe_message;
         }
     };
 }// namespace shenshang::logger

@@ -16,9 +16,9 @@ namespace shenshang::question {
 
     inline QuestionType questionTypeFromStr(const std::string& type) {
         static std::unordered_map<std::string, QuestionType> map = {
-            {"单选", QuestionType::SingleChoice},
-            {"多选", QuestionType::MultipleChoice},
-            {"判断", QuestionType::TrueOrFalse}
+            {"单选题", QuestionType::SingleChoice},
+            {"多选题", QuestionType::MultipleChoice},
+            {"判断题", QuestionType::TrueOrFalse}
         };
         auto it = map.find(type);
         return it != map.end() ? it->second : QuestionType::Unknown;

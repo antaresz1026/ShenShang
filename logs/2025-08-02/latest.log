@@ -1,6 +1,2 @@
-[21:32:38][info][0x00007ff187e006c0] User 'antaresz' logged in successfully
-[21:42:13][info][0x00007ff187e006c0] User 'antaresz' logged in successfully
-[21:42:41][info][0x00007ff187e006c0] User 'antaresz' logged in successfully
-[21:43:55][info][0x00007ff187e006c0] User 'antaresz' logged in successfully
-[21:52:13][warning][0x00007ff187e006c0] Login failed: incorrect password for user 'antaresz'
-[21:52:39][info][0x00007ff187e006c0] User 'antaresz' logged in successfully
+[23:58:18][error][0x00007f545cc006c0] Register insert error: 错误:  对于序列 users_user_id_seq, 权限不够\n
+[00:02:37][info][0x00007f5450c006c0] User 'antaresz' registered successfully
